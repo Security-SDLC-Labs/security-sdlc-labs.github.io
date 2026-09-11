@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security SDLC Labs</title>
+<meta name="description" content="Open-source integrations that wire security scanning into the SDLC control points where artifacts and infrastructure get produced.">
+<link rel="canonical" href="https://security-sdlc-labs.org/">
+<meta property="og:title" content="Security SDLC Labs">
+<meta property="og:description" content="Open-source integrations that wire security scanning into the SDLC control points where artifacts and infrastructure get produced.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://security-sdlc-labs.org/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>&#128274;</text></svg>">
+<style>
+:root{
+  --bg:#fbfbfa; --surface:#ffffff; --line:#e3e2de; --line-soft:#eeedea;
+  --ink:#1a1a18; --ink-2:#4a4a45; --ink-3:#78776f;
+  --accent:#0f5f4e; --accent-soft:#e6f2ef;
+  --warn-ink:#7a5a12; --warn-bg:#fdf5e2; --warn-line:#ebdcb4;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#131315; --surface:#1a1a1d; --line:#2e2e33; --line-soft:#242428;
+    --ink:#ececeb; --ink-2:#b4b4b0; --ink-3:#84847e;
+    --accent:#5fd3b4; --accent-soft:#12332c;
+    --warn-ink:#e8c674; --warn-bg:#2a2212; --warn-line:#4a3d1c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131315; --surface:#1a1a1d; --line:#2e2e33; --line-soft:#242428;
+  --ink:#ececeb; --ink-2:#b4b4b0; --ink-3:#84847e;
+  --accent:#5fd3b4; --accent-soft:#12332c;
+  --warn-ink:#e8c674; --warn-bg:#2a2212; --warn-line:#4a3d1c;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:46rem; margin:0 auto; padding:0 1.5rem}
+a{color:var(--accent); text-decoration:none; border-bottom:1px solid transparent}
+a:hover{border-bottom-color:currentColor}
+a:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+header{padding:4.5rem 0 3rem; border-bottom:1px solid var(--line)}
+.mark{
+  font-family:var(--mono); font-size:.75rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 1.1rem
+}
+h1{
+  margin:0 0 1.4rem; font-size:clamp(2rem,5.5vw,2.9rem);
+  line-height:1.12; letter-spacing:-.022em; font-weight:650;
+}
+.thesis{
+  margin:0; font-size:clamp(1.05rem,2.4vw,1.2rem); line-height:1.55;
+  color:var(--ink-2); max-width:34rem;
+}
+.thesis strong{color:var(--ink); font-weight:600}
+
+section{padding:3.25rem 0; border-bottom:1px solid var(--line-soft)}
+section:last-of-type{border-bottom:0}
+h2{
+  margin:0 0 .4rem; font-size:.76rem; font-family:var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:600;
+}
+.lede{margin:0 0 2rem; color:var(--ink-2); max-width:36rem}
+p{margin:0 0 1rem}
+p:last-child{margin-bottom:0}
+
+.tool{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:10px; padding:1.5rem 1.6rem; margin-bottom:1rem;
+}
+.tool:last-child{margin-bottom:0}
+.tool-head{
+  display:flex; flex-wrap:wrap; align-items:baseline;
+  gap:.7rem; margin-bottom:.6rem;
+}
+.tool h3{
+  margin:0; font-size:1.06rem; font-weight:620; letter-spacing:-.01em;
+}
+.chip{
+  font-family:var(--mono); font-size:.68rem; letter-spacing:.06em;
+  text-transform:uppercase; padding:.2rem .5rem; border-radius:4px;
+  background:var(--warn-bg); color:var(--warn-ink); border:1px solid var(--warn-line);
+  white-space:nowrap;
+}
+.tool p{color:var(--ink-2); font-size:.95rem; margin:0 0 .9rem}
+.meta{
+  font-family:var(--mono); font-size:.76rem; color:var(--ink-3);
+  display:flex; flex-wrap:wrap; gap:.4rem .9rem;
+}
+.meta span::before{content:"";}
+
+.person{display:flex; flex-wrap:wrap; gap:1.4rem; align-items:flex-start}
+.person-body{flex:1 1 18rem; min-width:0}
+.person h3{margin:0 0 .35rem; font-size:1.02rem; font-weight:620}
+.role{
+  font-family:var(--mono); font-size:.76rem; color:var(--ink-3);
+  margin:0 0 .8rem;
+}
+.links{display:flex; flex-wrap:wrap; gap:.4rem .9rem; font-size:.92rem; margin-top:.9rem}
+
+.contact-grid{display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(14rem,1fr))}
+.card{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:10px; padding:1.15rem 1.25rem;
+}
+.card h3{
+  margin:0 0 .35rem; font-size:.74rem; font-family:var(--mono);
+  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:600;
+}
+.card p{font-size:.92rem; color:var(--ink-2)}
+code{
+  font-family:var(--mono); font-size:.88em;
+  background:var(--accent-soft); color:var(--accent);
+  padding:.12em .38em; border-radius:4px;
+}
+
+.disclosure{
+  margin:1rem 0 0; padding:.75rem 0 .75rem .95rem;
+  border-left:2px solid var(--line); color:var(--ink-3);
+  font-size:.88rem; line-height:1.55;
+}
+
+footer{
+  padding:2.5rem 0 4rem; color:var(--ink-3); font-size:.85rem;
+  border-top:1px solid var(--line);
+}
+footer p{margin:0 0 .4rem}
+@media (max-width:520px){
+  header{padding:3rem 0 2.25rem}
+  section{padding:2.5rem 0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="mark">Security SDLC Labs</p>
+  <h1>Security integrations for build and deployment pipelines.</h1>
+  <p class="thesis">
+    Open-source tools that connect security scanning to the systems producing
+    artifacts and infrastructure. Currently Sonatype Nexus Repository and
+    HCP Terraform, both scanning with Checkmarx One. Apache-2.0 licensed.
+  </p>
+</header>
+
+<section>
+  <h2>The gap</h2>
+  <p>
+    Security scanners and the systems that build and deploy software usually
+    come from different vendors. Where the two meet, a supported integration
+    often does not exist, so the points where artifacts enter a repository or
+    infrastructure gets applied are left uncovered by tooling the organization
+    already runs.
+  </p>
+  <p>
+    This lab builds and maintains those integrations. The first two connect
+    Sonatype Nexus Repository and HCP Terraform to Checkmarx One, against
+    documented product version ranges.
+  </p>
+</section>
+
+<section>
+  <h2>Tools</h2>
+  <p class="lede">
+    Both are in production use. Public release is in preparation.
+  </p>
+
+  <div class="tool">
+    <div class="tool-head">
+      <h3>Nexus Checkmarx Security Plugin</h3>
+      <span class="chip">Preparing release</span>
+    </div>
+    <p>
+      Scans artifacts as they are proxied through Sonatype Nexus Repository,
+      using Checkmarx AST for software composition analysis. It flags
+      vulnerabilities, malicious packages and license violations, and can block
+      non-compliant artifacts before they reach a build.
+    </p>
+    <p>
+      Ships two parallel distributions covering the OrientDB and H2/PostgreSQL
+      generations of Nexus, so installations partway through that migration keep
+      working.
+    </p>
+    <div class="meta">
+      <span>Java 17</span><span>Apache-2.0</span><span>Nexus Repository 3</span>
+    </div>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head">
+      <h3>IaC Scan Broker for HCP Terraform</h3>
+      <span class="chip">Preparing release</span>
+    </div>
+    <p>
+      A Run Task endpoint that intercepts HCP Terraform plans, scans the proposed
+      infrastructure in Checkmarx One, and returns findings to the run. Failures
+      appear in the plan output rather than in a report read later.
+    </p>
+    <div class="meta">
+      <span>Go</span><span>Apache-2.0</span><span>HCP Terraform Run Tasks</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Maintainer</h2>
+  <div class="person">
+    <div class="person-body">
+      <h3>Andrew Gehring</h3>
+      <p class="role">Founder &amp; maintainer</p>
+      <p>
+        Works with organizations on Secure SDLC implementation, from program
+        strategy and executive reporting through to the technical controls that
+        carry it out. The tools published here come out of that work, built to
+        close gaps encountered in production environments.
+      </p>
+      <p class="disclosure">
+        Employed by Checkmarx. This lab is personal work, built and maintained
+        on personal time. The tools here are not Checkmarx products and are not
+        supported by Checkmarx.
+      </p>
+      <div class="links">
+        <a href="https://github.com/agehring">github.com/agehring</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Contact</h2>
+  <div class="contact-grid">
+    <div class="card">
+      <h3>Security</h3>
+      <p>
+        Report a vulnerability privately to
+        <a href="mailto:security@security-sdlc-labs.org">security@security-sdlc-labs.org</a>,
+        or through private vulnerability reporting on the relevant repository.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Everything else</h3>
+      <p>
+        Issues and discussion belong on the repositories at
+        <a href="https://github.com/Security-SDLC-Labs">github.com/Security-SDLC-Labs</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>
+    Maintained on a best-effort basis. Issues are acknowledged within a week;
+    fixes land when time allows.
+  </p>
+  <p>
+    Ideas, bug reports and feature requests are welcome on the repository issue
+    trackers. Code contributions are not accepted, so that authorship of the
+    published work stays unambiguous.
+  </p>
+  <p>
+    The maintainer is employed by Checkmarx. These tools are personal work.
+    They are not Checkmarx products, and are not endorsed or supported by
+    Checkmarx, Sonatype, or HashiCorp. All trademarks are the property of their
+    respective owners.
+  </p>
+</footer>
+
+</div>
+</body>
+</html>
